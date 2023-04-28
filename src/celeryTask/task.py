@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-""" The Celery task to handle the generation of reports """
+""" Entry point for the Celery task to handle the generation of reports """
 from celery import Celery
-from dbQuery import list_of_stores, save_report
+from dbQuery import list_of_stores, save_report   # not yet completed
 from computation.reportGenerator import generateReport
 
 

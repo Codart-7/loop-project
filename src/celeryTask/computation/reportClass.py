@@ -2,9 +2,10 @@
 """ Creates the class to represent and manage reports """
 from baseReport import BaseReport
 import datetime
-from dbQuery import *
+from dbQuery import get_store_hours
 
 
+# None of the code has really been implemented
 class Report(BaseReport):
     """ Represents a report and the methods required to manage it """
 
@@ -12,9 +13,10 @@ class Report(BaseReport):
         """ Initialize the class """
         super().__init__()
         self.storeID = storeID
-        
+    
+
     def uptime_last_hour(self) -> int:
-        """ Calculates uptime in the last hour in minutes """
+        """ Calculates uptime in the last hour in minutes """       
         return 4
     
 

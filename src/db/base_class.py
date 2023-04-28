@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+""" Base class for the SQLAlchemy models """
 from typing import Any
 from sqlalchemy.ext.declarative import as_declarative, declared_attr
 

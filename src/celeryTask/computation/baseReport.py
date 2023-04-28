@@ -10,4 +10,4 @@ class BaseReport:
 
     def __init__(self) -> None:
         self.current_day: int = datetime.datetime.utcnow().weekday()
-        self.current_hour: int = datetime.datetime.utcnow().weekday()
+        self.current_hour: int = datetime.datetime.utcnow().hour

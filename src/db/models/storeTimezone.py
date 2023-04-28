@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+""" Model for the store_timezone table """
 from sqlalchemy import Column, Integer, String
 
 from db.base_class import Base
