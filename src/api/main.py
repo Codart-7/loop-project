@@ -1,3 +1,9 @@
+#!/usr/bin/env python3
+""" The main API entry point """
+import os
+import sys
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+
 from fastapi import FastAPI
 from config.config import settings
 from routes.router import end_points

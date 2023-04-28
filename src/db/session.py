@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+""" Creates everything needed for the SQLAlchemy connection """
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from typing import Generator

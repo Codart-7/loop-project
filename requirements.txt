@@ -3,3 +3,6 @@ uvicorn[standard]
 SQLAlchemy
 psycopg2-binary
 python-dotenv
+celery
+redis
+python-multipart

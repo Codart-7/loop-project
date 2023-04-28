@@ -30,8 +30,20 @@ You need two APIs
         - if report generation is not complete, return “Running” as the output
         - if report generation is complete, return “Complete” along with the CSV file with the schema described above.
 
+## Data Sources
+The following are links to the data
+- [store_status](https://drive.google.com/file/d/1UIx1hVJ7qt_6oQoGZgb8B3P2vd1FD025/view?usp=sharing)
+- [store_hours](https://drive.google.com/file/d/1va1X3ydSh-0Rt1hsy2QSnHRA4w57PcXg/view?usp=sharing)
+- [store_timezone](https://drive.google.com/file/d/101P9quxHoMZMZCVWQ5o-shonk2lgK1-o/view?usp=sharing)
+
+### Extra
+I implented some endpoints to help with populating your database tables with the data from these files. Check `src/api/routes/router.py`
+
+
 ## Usage
-- Install requirements
+- Install requirements.txt
 - Create a `.env` file that has the same fields as `.env.example`
 - Have access to a PostgreSQL database
+- Take a look at the config.config file and follow the instruction
 - Start the app: `uvicorn main:app`
+
