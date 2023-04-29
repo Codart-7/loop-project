@@ -37,7 +37,9 @@ The following are links to the data
 - [store_timezone](https://drive.google.com/file/d/101P9quxHoMZMZCVWQ5o-shonk2lgK1-o/view?usp=sharing)
 
 ### Extra
-I implented some endpoints to help with populating your database tables with the data from these files. Check `src/api/routes/router.py`
+I implented some endpoints to help with populating your database tables with the data from these files.
+Check `src/api/routes/router.py`.
+Alternatively, use the `updateDB.py` file. Open the file and read the instructions first.
 
 
 ## Usage
