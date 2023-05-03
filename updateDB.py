@@ -20,7 +20,7 @@ def populate_table(table_name, file_name):
     cur = conn.cursor()
 
     # Create the table if it doesn't exist
-    cur.execute(f"CREATE TABLE IF NOT EXISTS {table_name} (id SERIAL PRIMARY KEY, store_id TEXT, status TEXT, timestamp_utc TIME WITH TIME ZONE)")
+    cur.execute(f"CREATE TABLE IF NOT EXISTS {table_name} (id SERIAL PRIMARY KEY, store_id TEXT, status TEXT, timestamp_utc TIMESTAMP WITH TIME ZONE)")
 
     # Open the CSV file and insert the data into the table
     with open(file_name, "r") as f:

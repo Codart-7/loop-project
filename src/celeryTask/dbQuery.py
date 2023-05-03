@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """ All database queries to perform the Celery task. """
 import pytz
-from datetime import datetime, time
+from datetime import datetime, time, timedelta
 from sqlalchemy.sql.sqltypes import TIME
 from sqlalchemy import String, func, text, bindparam
 
@@ -40,17 +40,13 @@ def get_store_hours(store_id: str):
         This represents the most recent data for the store
     """
     db = SessionLocal()
-    store_hours = db.query(
-        Store_Hours.day,
-        Store_Hours.start_time_local,
-        Store_Hours.end_time_local
-    ).filter_by(store_id=store_id).all()
+    store_hours = db.query(Store_Hours).filter_by(store_id=store_id).all()
     db.close()
     return store_hours[-7:]
 
 
-def get_store_status_local(store_id: str, timezone: str):
-    """ Gets status data from database by store_id
+def get_store_status_local(store_id: str, timezone: str, activityStatus: str):
+    """ Gets status data from database by store_id and required status.
         'timezone_str' is already converted to the timezone passed as argument
     """
     db = SessionLocal()
@@ -58,7 +54,7 @@ def get_store_status_local(store_id: str, timezone: str):
     status = db.query(
         Store_Status.status,
         text("(timestamp_utc AT TIME ZONE 'UTC') AT TIME ZONE :timezone").bindparams(bindparam("timezone", value=timezone, type_=String))
-        ).filter_by(store_id=store_id).all()
+        ).filter_by(store_id=store_id, status=activityStatus).all()
     db.close
     return status
 
@@ -76,11 +72,47 @@ def get_store_timezone(store_id: str):
 
 
 # Uncomment the below to test any of the functions. Implement your testing code as well
-#if __name__ == "__main__":
-#    storeHours = get_store_hours("1481966498820158979")
-#    for data in storeHours:
-#        print(data)
-#        print("")
+if __name__ == "__main__":
+    timezone_data = get_store_timezone("1481966498820158979")
+    timezone_str = str(timezone_data[0][1])
+    
+    status = get_store_status_local("1481966498820158979", timezone=timezone_str, activityStatus="inactive")
+        
+    timesList = []
+    for data in status:
+        timesList.append(data[1])
+        
+
+    try:
+        last_entry = max(timesList)
+    
+        storeHours = get_store_hours("1481966498820158979")
+    
+        for data in storeHours:
+            if data.day == last_entry.weekday():
+                # get current time
+                timeZone = pytz.timezone(timezone_str)
+                current = datetime.now(timeZone)
+                current_time = current.time()
+
+                if current_time > data.start_time_local and current_time < data.end_time_local:
+                    print("within time frame")
+                    minute_difference = int((current - last_entry).total_seconds() / 60)
+                    print(minute_difference)
+                
+                else:
+                    print("should return 0")
+    except ValueError:
+        print("no value for last entry.")
+            #time_part = last_entry.time()
+            #start_time = data.start_time_local
+            #if time_part > start_time:
+            #    print("time_part is greater than start_time")
+            #else:
+            #    print("start_time is greater than or equal to time_part")
+
+
+
     
 #    status = get_store_status_local("1481966498820158979", 'Asia/Beirut')
 #    timesList = []
@@ -97,3 +129,8 @@ def get_store_timezone(store_id: str):
 #    timezone = get_store_timezone("1481966498820158979")
 #    for time in timezone:
 #        print(time)
+
+#   storeHours = get_store_hours("1481966498820158979")
+#    for data in storeHours:
+#        print(f"ID: {data.id}, Store ID: {data.store_id}, Day: {data.day}, Start Time: {data.start_time_local}, End Time: {data.end_time_local}")
+#        print("")

@@ -1,53 +1,54 @@
 #!/usr/bin/env python3
 """ Creates the class to represent and manage reports """
-from baseReport import BaseReport
-import datetime
+from datetime import datetime, timedelta
 import dbQuery
 
 
 # None of the code has really been implemented
-class Report(BaseReport):
+class Report:
     """ Represents a report and the methods required to manage it """
 
-    def __init__(self, storeID: str):
+    def __init__(self, storeID: str, timeZone: str, current_datetime: datetime):
         """ Initialize the class """
-        super().__init__()
         self.storeID = storeID
+        self.timezone = timeZone
+        self.datetime = current_datetime
     
 
-    def uptime_last_hour(self) -> int:
+    def uptime_last_hour(self):
         """ Calculates uptime in the last hour in minutes """
-        timezone_data = dbQuery.get_store_timezone(store_id=self.storeID)
-        timezone_str = str(timezone_data[1])
-        status = dbQuery.get_store_status_local(store_id=self.storeID, timezone=timezone_str)
+
+        # Get the store status from the database for "active" status
+        status = dbQuery.get_store_status_local(store_id=self.storeID, timezone=self.timezone, activityStatus="active")
         
+        # Put all the times in a list
         timesList = []
         for data in status:
             timesList.append(data[1])
         
-        last_entry = max(timesList)
+        try:
+            # Get the most recent entry
+            last_entry = max(timesList)
 
-        start_time = last_entry - datetime.timedelta(hours=24)
+            # Get store hours
+            storeHours = dbQuery.get_store_hours(store_id=self.storeID)
 
-        data_24hrs = [entry for entry in timesList if entry >= start_time]
-        return 4
+            for data in storeHours:
+                # Find storeHours entry for the day of last_entry
+                if data.day == last_entry.weekday():
+                    current_time = self.datetime.time()
+
+                    # Ensure time of query is within business hours
+                    if current_time > data.start_time_local and current_time < data.end_time_local:
+                        return int((self.datetime - last_entry) / timedelta(minutes=1))
+                    else:
+                        return 0
+        except ValueError:
+            return 0
     
 
     def uptime_last_day(self) -> int:
         """ Calculates uptime in the last day in hours """
-        timezone_data = dbQuery.get_store_timezone(store_id=self.storeID)
-        timezone_str = str(timezone_data[1])
-        status = dbQuery.get_store_status_local(store_id=self.storeID, timezone=timezone_str)
-        
-        timesList = []
-        for data in status:
-            timesList.append(data[1])
-        
-        last_entry = max(timesList)
-
-        start_time = last_entry - datetime.timedelta(hours=24)
-
-        data_24hrs = [entry for entry in timesList if entry >= start_time]
         return 4
     
 
@@ -56,10 +57,37 @@ class Report(BaseReport):
         return 4
     
 
-    def downtime_last_hour(self) -> int:
+    def downtime_last_hour(self):
         """ Calculates downtime in the last hour in minutes """
-        return 4
-    
+
+        # Get the store status from the database for "active" status
+        status = dbQuery.get_store_status_local(store_id=self.storeID, timezone=self.timezone, activityStatus="inactive")
+        
+        # Put all the times in a list
+        timesList = []
+        for data in status:
+            timesList.append(data[1])
+        
+        try:
+            # Get the most recent entry
+            last_entry = max(timesList)
+
+            # Get store hours
+            storeHours = dbQuery.get_store_hours(store_id=self.storeID)
+
+            for data in storeHours:
+                # Find storeHours entry for the day of last_entry
+                if data.day == last_entry.weekday():
+                    current_time = self.datetime.time()
+
+                    # Ensure time of query is within business hours
+                    if current_time > data.start_time_local and current_time < data.end_time_local:
+                        return int((self.datetime - last_entry) / timedelta(minutes=1))
+                    else:
+                        return 0
+        except ValueError:
+            return 0
+
 
     def downtime_last_day(self) -> int:
         """ Calculates downtime in the last day in hours """
