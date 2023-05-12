@@ -11,7 +11,7 @@ The sub-task performs the port generation for each store and saves the report in
 ### Sub-task algorithm
 The function `generateReport` takes in the storeID. It creates an instance of the `Report` class, calls all its methods (wich perform the necessary computations) and fills the result of these method calls into a dictionary. It then returns the complete dictionary which now has all the values required of a report. The sub-task takes this dictionary and saves the data into the database.
 
-### Current challenges
-In implementing the methods of the `Report` class, queries are made to the database. My current biggest challenge is transforming the data retrived from the database into usable format.
 
-For example, transforming the type `<class 'sqlalchemy.sql.sqltypes.TIME'>` received when you query the `store_hours` table into a `datetime` object so I can find the time differences.
+
+
+
