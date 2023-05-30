@@ -4,9 +4,10 @@
     Usage: python updateDB.py <table name> <csv file>
 
     Update the following lines for your use case:
-    23rd line: It uses id as primary key.
+    20th line: Update the "database", "user", "password" and "host" variables to your settings
+    24rd line: It uses id as primary key.
                The others are the names of the columns and their data types, in the order they appear in the file
-    30th line: The names of the columns as listed above with the right number of format specifiers
+    31th line: The names of the columns as listed above with the right number of format specifiers
 """
 import argparse
 import csv
@@ -16,7 +17,7 @@ import psycopg2
 def populate_table(table_name, file_name):
     # Connect to the database
     print("start")
-    conn = psycopg2.connect(database="test", user="michael", password="AlphaSql-1", host="localhost", port=5432)
+    conn = psycopg2.connect(database="test", user="test", password="test", host="localhost", port=5432)
     cur = conn.cursor()
 
     # Create the table if it doesn't exist

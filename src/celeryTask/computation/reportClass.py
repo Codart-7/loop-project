@@ -49,6 +49,28 @@ class Report:
 
     def uptime_last_day(self) -> int:
         """ Calculates uptime in the last day in hours """
+        # Get the store status from the database for "active" status
+        status = dbQuery.get_store_status_local(store_id=self.storeID, timezone=self.timezone, activityStatus="active")
+
+        # Put all the times in a list
+        timesList = []
+        for data in status:
+            timesList.append(data[1])
+        
+        try:
+            # Get the most recent entry
+            last_entry = max(timesList)
+
+            # Get store hours
+            storeHours = dbQuery.get_store_hours(store_id=self.storeID)
+
+            for data in storeHours:
+                # Find storeHours entry for the day of last_entry
+                if data.day == last_entry.weekday():
+                    current_time = self.datetime.time()
+
+                    # Get all entries of `timelist` from `data.start_time_local` to `last_entry` into a list
+                    # First assumption is that entries come in every hour. Examine the query data to determine the best algorithm
         return 4
     
 
